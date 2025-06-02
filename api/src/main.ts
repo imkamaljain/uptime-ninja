@@ -1,5 +1,6 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import cors from "cors";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { MyLoggerService } from "./common/services/my-logger.service";
@@ -18,6 +19,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AllExceptionsFilter());
+  app.use(cors({ origin: "http://localhost:3001" }));
 
   setupSwagger(app);
   await app.listen(process.env.PORT ?? 3000);

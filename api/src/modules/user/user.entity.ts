@@ -1,8 +1,12 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
 export class User {
-  @PrimaryColumn({
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
+
+  @PrimaryGeneratedColumn({
     type: "bigint",
   })
   id: number;
@@ -20,6 +24,12 @@ export class User {
     nullable: false,
   })
   email: string;
+
+  @Column({
+    type: "varchar",
+    length: 15,
+  })
+  password: string;
 
   @Column({
     type: "boolean",
