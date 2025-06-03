@@ -1,3 +1,4 @@
+import { MonitorStatus } from "src/common/enums/monitor.enum";
 import {
   Column,
   CreateDateColumn,
@@ -20,10 +21,10 @@ export class Monitor {
   id: number;
 
   @Column({
-    type: "bigint",
+    type: "uuid",
     nullable: false,
   })
-  user_id: number;
+  user_id: string;
 
   @Column({
     type: "varchar",
@@ -39,10 +40,23 @@ export class Monitor {
   url: string;
 
   @Column({
-    type: "text",
-    default: "unknown",
+    type: "enum",
+    enum: MonitorStatus,
+    default: MonitorStatus.UP,
   })
   status: string;
+
+  @Column({
+    type: "timestamptz",
+    nullable: true,
+  })
+  last_checked_at: Date;
+
+  @Column({
+    type: "int",
+    nullable: true,
+  })
+  response_time: number;
 
   @Column({
     type: "timestamptz",

@@ -37,7 +37,7 @@ const Header = ({
                 type="button"
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
                   activeTab === tab.id
                     ? "bg-gray-800 text-white"
                     : "text-gray-300 hover:text-white hover:bg-gray-800"
@@ -57,14 +57,12 @@ const Header = ({
             className="p-2 hover:bg-gray-800 rounded transition-colors"
             title="Toggle theme"
           >
-            <button type="button" className="text-xl cursor-pointer">
-              <Sun className="w-6 h-6 text-yellow-500" />
-            </button>
+            <Sun className="w-6 h-6 text-yellow-500" />
           </button>
           <button
             type="button"
             onClick={onUserClick}
-            className="p-2 hover:bg-gray-800 rounded transition-colors cursor-pointer"
+            className="p-2 hover:bg-gray-800 rounded transition-colors"
             title="User menu"
           >
             <span className="text-xl">

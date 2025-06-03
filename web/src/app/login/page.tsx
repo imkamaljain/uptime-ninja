@@ -20,11 +20,11 @@ export default function Login() {
   };
   const handleSubmit = async () => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
         formData,
       );
-
+      localStorage.setItem("access_token", response.data.access_token);
       router.push("/monitors");
     } catch (error) {
       console.error("Login failed:", error);

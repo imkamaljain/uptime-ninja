@@ -8,11 +8,12 @@ import {
   Param,
   Post,
 } from "@nestjs/common";
-import { ApiOperation } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { User } from "src/common/decorators/user.decorator";
 import { AddMonitorRequestDto } from "./dto/request/add-monitor-request.dto";
 import { MonitorService } from "./monitor.service";
 
+@ApiBearerAuth("JWT")
 @Controller("monitor")
 export class MonitorController {
   constructor(private readonly monitorService: MonitorService) {}
@@ -23,8 +24,8 @@ export class MonitorController {
     description: "Get all monitors of user",
   })
   @HttpCode(HttpStatus.OK)
-  async getAllMonitor(@User("id") id: number) {
-    return this.monitorService.getAllMonitor(id);
+  async getAllMonitor(@User("id") user_id: string) {
+    return this.monitorService.getAllMonitor(user_id);
   }
 
   @Post()
@@ -34,7 +35,7 @@ export class MonitorController {
   })
   @HttpCode(HttpStatus.CREATED)
   async addMonitor(
-    @User("id") user_id: number,
+    @User("id") user_id: string,
     @Body() body: AddMonitorRequestDto,
   ) {
     return this.monitorService.addMonitor(user_id, body);
@@ -46,7 +47,7 @@ export class MonitorController {
     description: "Delete all monitors of user",
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteAllMonitor(@User("id") user_id: number) {
+  async deleteAllMonitor(@User("id") user_id: string) {
     return this.monitorService.deleteAllMonitor(user_id);
   }
 
@@ -57,7 +58,7 @@ export class MonitorController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteMonitor(
-    @User("id") user_id: number,
+    @User("id") user_id: string,
     @Param("id") monitor_id: number,
   ) {
     return this.monitorService.deleteMonitor(user_id, monitor_id);

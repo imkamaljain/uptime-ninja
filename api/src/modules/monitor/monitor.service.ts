@@ -13,17 +13,16 @@ export class MonitorService {
     private readonly sslCheckerService: SslCheckerService,
   ) {}
 
-  async getAllMonitor(id: number) {
-    const data = await this.monitorRepository.findBy({ id });
+  async getAllMonitor(user_id: string) {
+    const data = await this.monitorRepository.findBy({ user_id });
     return data;
   }
 
-  async addMonitor(user_id: number, body: AddMonitorRequestDto) {
+  async addMonitor(user_id: string, body: AddMonitorRequestDto) {
     const { name, url } = body;
     const monitorExists: boolean = await this.monitorRepository.exists({
       where: {
         user_id,
-        name,
         url,
       },
     });
@@ -49,7 +48,7 @@ export class MonitorService {
     };
   }
 
-  async deleteMonitor(user_id: number, monitor_id: number) {
+  async deleteMonitor(user_id: string, monitor_id: number) {
     await this.monitorRepository.delete({
       id: monitor_id,
       user_id,
@@ -59,7 +58,7 @@ export class MonitorService {
     };
   }
 
-  async deleteAllMonitor(user_id: number) {
+  async deleteAllMonitor(user_id: string) {
     await this.monitorRepository.delete({
       user_id,
     });

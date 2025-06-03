@@ -6,17 +6,15 @@ export class User {
     Object.assign(this, partial);
   }
 
-  @PrimaryGeneratedColumn({
-    type: "bigint",
-  })
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column({
     type: "varchar",
     length: 100,
     nullable: false,
   })
-  name: number;
+  name: string;
 
   @Column({
     type: "varchar",
