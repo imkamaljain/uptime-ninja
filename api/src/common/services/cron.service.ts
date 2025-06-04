@@ -35,7 +35,7 @@ export class CronService {
       : `${minutes} minutes`;
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async checkMonitorStatus() {
     this.logger.log("Starting monitor status check...");
 

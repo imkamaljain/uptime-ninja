@@ -51,10 +51,22 @@ export class IncidentService {
     return updateResult.raw[0];
   }
 
-  async getUserIncidents(user_id: number) {
+  async getUserIncidents(user_id: string) {
     return await this.incidentRepository
       .createQueryBuilder("incident")
       .leftJoin("incident.monitor", "monitor")
+      .select([
+        "incident.id",
+        "incident.title",
+        "incident.description",
+        "incident.status",
+        "incident.started_at",
+        "incident.resolved_at",
+
+        "monitor.id",
+        "monitor.name",
+        "monitor.url",
+      ])
       .where("monitor.user_id = :user_id", { user_id })
       .orderBy("incident.created_at", "DESC")
       .getMany();

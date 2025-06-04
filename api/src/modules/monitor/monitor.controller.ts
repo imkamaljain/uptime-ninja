@@ -6,11 +6,13 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { User } from "src/common/decorators/user.decorator";
 import { AddMonitorRequestDto } from "./dto/request/add-monitor-request.dto";
+import { UpdateMonitorRequestDto } from "./dto/request/update-monitor-request.dto";
 import { MonitorService } from "./monitor.service";
 
 @ApiBearerAuth("JWT")
@@ -39,6 +41,20 @@ export class MonitorController {
     @Body() body: AddMonitorRequestDto,
   ) {
     return this.monitorService.addMonitor(user_id, body);
+  }
+
+  @Patch(":id")
+  @ApiOperation({
+    summary: "Update monitor",
+    description: "Update monitor of user",
+  })
+  @HttpCode(HttpStatus.OK)
+  async updateMonitor(
+    @User("id") user_id: string,
+    @Param("id") monitor_id: number,
+    @Body() body: UpdateMonitorRequestDto,
+  ) {
+    return this.monitorService.updateMonitor(user_id, monitor_id, body);
   }
 
   @Delete("all")

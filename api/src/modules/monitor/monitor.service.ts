@@ -1,8 +1,13 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SslCheckerService } from "src/common/services/ssl-checker.service";
-import { Repository } from "typeorm";
+import { Repository, UpdateResult } from "typeorm";
 import { AddMonitorRequestDto } from "./dto/request/add-monitor-request.dto";
+import { UpdateMonitorRequestDto } from "./dto/request/update-monitor-request.dto";
 import { Monitor } from "./monitor.entity";
 
 @Injectable()
@@ -43,6 +48,31 @@ export class MonitorService {
         ssl_valid_to: sslData.validTo || null,
       }),
     );
+    return {
+      message: "success",
+    };
+  }
+
+  async updateMonitor(
+    user_id: string,
+    monitor_id: number,
+    body: UpdateMonitorRequestDto,
+  ) {
+    const updateResult: UpdateResult = await this.monitorRepository.update(
+      {
+        id: monitor_id,
+        user_id,
+      },
+      {
+        name: body.name,
+        url: body.url,
+      },
+    );
+
+    if (updateResult.affected === 0) {
+      throw new NotFoundException("monitor not found");
+    }
+
     return {
       message: "success",
     };
