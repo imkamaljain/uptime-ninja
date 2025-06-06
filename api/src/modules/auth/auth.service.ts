@@ -19,10 +19,17 @@ export class AuthService {
         email: body.email,
         password: body.password,
       },
+      select: ["id", "is_deleted"],
     });
 
     if (!user) {
       throw new BadRequestException("Invalid credentials");
+    }
+
+    if (user.is_deleted) {
+      throw new BadRequestException(
+        "Your account has been deleted. Please contact support.",
+      );
     }
 
     return {

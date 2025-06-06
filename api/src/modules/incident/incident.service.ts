@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { IncidentStatus } from "src/common/enums/incident.enum";
 import { MyLoggerService } from "src/common/services/my-logger.service";
 import { Repository, UpdateResult } from "typeorm";
 import { Monitor } from "../monitor/monitor.entity";
@@ -23,8 +24,6 @@ export class IncidentService {
       monitor_id: monitor.id,
       title,
       description,
-      started_at: new Date(),
-      status: "open",
     });
 
     await this.incidentRepository.insert(incident);
@@ -39,7 +38,7 @@ export class IncidentService {
         resolved_at: new Date(),
       })
       .where("monitor_id = :monitor_id", { monitor_id })
-      .andWhere("status = :status", { status: "open" })
+      .andWhere("status = :status", { status: IncidentStatus.OPEN })
       .returning(["started_at", "resolved_at"])
       .execute();
 
@@ -60,7 +59,7 @@ export class IncidentService {
         "incident.title",
         "incident.description",
         "incident.status",
-        "incident.started_at",
+        "incident.created_at",
         "incident.resolved_at",
 
         "monitor.id",

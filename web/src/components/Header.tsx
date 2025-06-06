@@ -1,4 +1,6 @@
-import { Sun, TrendingUp, User } from "lucide-react";
+import { LogOut, Settings, TrendingUp, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const Header = ({
   activeTab = "monitors",
@@ -8,14 +10,25 @@ const Header = ({
     { id: "incidents", label: "Incidents" },
   ],
 }) => {
+  const router = useRouter();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleTabClick = (tabId: string) => {
-    window.location.href = `/${tabId}`;
-  };
-  const onThemeToggle = () => {
-    document.documentElement.classList.toggle("light");
-  };
-  const onUserClick = () => {
-    alert("User menu clicked");
+    router.push(`/${tabId}`);
   };
 
   return (
@@ -49,26 +62,54 @@ const Header = ({
           </nav>
         </div>
 
-        {/* User Controls */}
-        <div className="flex items-center space-x-4">
-          <button
+        <div className="flex items-center space-x-4 relative">
+          {/* Theme Toggle */}
+          {/* <button
             type="button"
-            onClick={() => onThemeToggle()}
+            onClick={toggleTheme}
             className="p-2 hover:bg-gray-800 rounded transition-colors"
             title="Toggle theme"
           >
+            {theme === "dark" ? (
             <Sun className="w-6 h-6 text-yellow-500" />
-          </button>
-          <button
-            type="button"
-            onClick={onUserClick}
-            className="p-2 hover:bg-gray-800 rounded transition-colors"
-            title="User menu"
-          >
-            <span className="text-xl">
-              <User className="w-6 h-6 text-blue-500" />
-            </span>
-          </button>
+            ) : (
+              <Moon className="w-6 h-6 text-yellow-500" />
+            )}
+          </button> */}
+
+          {/* User Menu */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="p-2 hover:bg-gray-800 rounded transition-colors"
+              title="User menu"
+            >
+              <span className="text-xl">
+                <User className="w-6 h-6 text-blue-500" />
+              </span>
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 top-full mt-1 w-40 bg-gray-800 rounded-md shadow-lg py-2 z-50 text-md">
+                <button
+                  type="button"
+                  onClick={() => router.push("/my-profile")}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-gray-200 hover:bg-gray-700"
+                >
+                  <Settings className="w-4 h-4 text-gray-400" />
+                  My Profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/login")}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-red-400 hover:bg-gray-700"
+                >
+                  <LogOut className="w-4 h-4 text-red-400" />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

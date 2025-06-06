@@ -1,3 +1,4 @@
+import { IncidentStatus } from "src/common/enums/incident.enum";
 import {
   Column,
   CreateDateColumn,
@@ -37,17 +38,11 @@ export class Incident {
   description: string;
 
   @Column({
-    type: "varchar",
-    length: 50,
-    default: "open",
+    type: "enum",
+    enum: IncidentStatus,
+    default: IncidentStatus.OPEN,
   })
-  status: string; // open, acknowledged, resolved
-
-  @Column({
-    type: "timestamptz",
-    nullable: false,
-  })
-  started_at: Date;
+  status: string;
 
   @Column({
     type: "timestamptz",

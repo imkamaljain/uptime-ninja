@@ -34,4 +34,15 @@ export class User {
     default: false,
   })
   email_opt_in: boolean;
+
+  @Column({
+    nullable: true,
+  })
+  slack_webhook_url: string;
+
+  @Column({
+    type: "boolean",
+    default: false,
+  })
+  is_deleted: boolean;
 }

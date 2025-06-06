@@ -1,215 +1,376 @@
 import {
   Activity,
+  ArrowRight,
   BarChart3,
   Bell,
   CheckCircle,
+  Clock,
   Globe,
+  Globe2,
   Shield,
+  Star,
   TrendingUp,
+  Users,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import theme, { themeClasses } from "../theme";
 
 export default function Home() {
+  const stats: Record<any, any>[] = [
+    {
+      key: "websites-monitored",
+      icon: <Users className="w-6 h-6 text-blue-400" />,
+      iconBg: "bg-blue-500/20",
+      gradientFrom: "from-blue-500/5",
+      gradientTo: "to-purple-500/5",
+      borderHover: "hover:border-slate-600",
+      value: "50,000+",
+      valueStyle:
+        "bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent",
+      label: "Websites Monitored",
+    },
+    {
+      key: "uptime-accuracy",
+      icon: <TrendingUp className="w-6 h-6 text-green-400" />,
+      iconBg: "bg-green-500/20",
+      gradientFrom: "from-green-500/5",
+      gradientTo: "to-emerald-500/5",
+      borderHover: "hover:border-green-500/50",
+      shadowHover: "hover:shadow-green-500/10",
+      value: "99.9%",
+      valueStyle: "text-green-400",
+      label: "Uptime Accuracy",
+    },
+    {
+      key: "response-time",
+      icon: <Clock className="w-6 h-6 text-yellow-400" />,
+      iconBg: "bg-yellow-500/20",
+      gradientFrom: "from-yellow-500/5",
+      gradientTo: "to-orange-500/5",
+      borderHover: "hover:border-yellow-500/50",
+      shadowHover: "hover:shadow-yellow-500/10",
+      value: "<1s",
+      valueStyle: "text-yellow-400",
+      label: "Response Time",
+    },
+    {
+      key: "global-locations",
+      icon: <Globe2 className="w-6 h-6 text-purple-400" />,
+      iconBg: "bg-purple-500/20",
+      gradientFrom: "from-purple-500/5",
+      gradientTo: "to-pink-500/5",
+      borderHover: "hover:border-purple-500/50",
+      shadowHover: "hover:shadow-purple-500/10",
+      value: "15+",
+      valueStyle: "text-purple-400",
+      label: "Global Locations",
+    },
+  ];
+
+  const features: Record<any, any>[] = [
+    {
+      key: "real-time-monitoring",
+      title: "Real-time Monitoring",
+      description:
+        "Monitor your websites every minute with instant notifications when issues arise.",
+      icon: <Activity className="w-8 h-8 text-blue-400" />,
+      borderColor: "blue-500",
+      gradientFrom: "blue-500/5",
+      gradientTo: "cyan-500/5",
+      iconBgFrom: "blue-500/20",
+      iconBgTo: "cyan-500/20",
+      iconBorder: "blue-500/30",
+      shadowColor: "blue-500/10",
+    },
+    {
+      key: "detailed-analytics",
+      title: "Detailed Analytics",
+      description:
+        "Get insights into your website performance with uptime statistics and response times.",
+      icon: <BarChart3 className="w-8 h-8 text-green-400" />,
+      borderColor: "green-500",
+      gradientFrom: "green-500/5",
+      gradientTo: "emerald-500/5",
+      iconBgFrom: "green-500/20",
+      iconBgTo: "emerald-500/20",
+      iconBorder: "green-500/30",
+      shadowColor: "green-500/10",
+    },
+    {
+      key: "instant-alerts",
+      title: "Instant Alerts",
+      description:
+        "Receive immediate notifications via email when your websites go down or recover.",
+      icon: <Bell className="w-8 h-8 text-yellow-400" />,
+      borderColor: "yellow-500",
+      gradientFrom: "yellow-500/5",
+      gradientTo: "orange-500/5",
+      iconBgFrom: "yellow-500/20",
+      iconBgTo: "orange-500/20",
+      iconBorder: "yellow-500/30",
+      shadowColor: "yellow-500/10",
+    },
+    {
+      key: "easy-setup",
+      title: "Easy Setup",
+      description:
+        "Add your websites in seconds. No complex configuration or technical knowledge required.",
+      icon: <CheckCircle className="w-8 h-8 text-purple-400" />,
+      borderColor: "purple-500",
+      gradientFrom: "purple-500/5",
+      gradientTo: "pink-500/5",
+      iconBgFrom: "purple-500/20",
+      iconBgTo: "pink-500/20",
+      iconBorder: "purple-500/30",
+      shadowColor: "purple-500/10",
+    },
+    {
+      key: "incident-tracking",
+      title: "Incident Tracking",
+      description:
+        "Keep track of all downtime events with detailed incident logs and recovery times.",
+      icon: <Shield className="w-8 h-8 text-red-400" />,
+      borderColor: "red-500",
+      gradientFrom: "red-500/5",
+      gradientTo: "orange-500/5",
+      iconBgFrom: "red-500/20",
+      iconBgTo: "orange-500/20",
+      iconBorder: "red-500/30",
+      shadowColor: "red-500/10",
+    },
+    {
+      key: "status-dashboard",
+      title: "Status Dashboard",
+      description:
+        "Beautiful, intuitive dashboard to monitor all your services at a glance.",
+      icon: <TrendingUp className="w-8 h-8 text-cyan-400" />,
+      borderColor: "cyan-500",
+      gradientFrom: "cyan-500/5",
+      gradientTo: "blue-500/5",
+      iconBgFrom: "cyan-500/20",
+      iconBgTo: "blue-500/20",
+      iconBorder: "cyan-500/30",
+      shadowColor: "cyan-500/10",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
+    <div className={themeClasses.page}>
       {/* Hero Section */}
-      <section className="text-center py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-800">
-        <div className="flex justify-center items-center space-x-3 mb-6">
-          <Activity className="w-12 h-12 text-blue-400" />
-          <h1 className="text-4xl font-bold">Uptime Ninja</h1>
-        </div>
+      <section
+        className={`${theme.layout.section} relative text-center py-24 px-6 overflow-hidden`}
+      >
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-cyan-500/10 blur-3xl opacity-30" />
+        <div className="absolute top-20 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
 
-        <div className="mb-8">
-          <span className="flex items-center justify-center">
-            <span className="flex items-center bg-slate-600 text-white/80 px-3 py-1 rounded-full space-x-2">
-              <Zap className="w-4 h-4" />
-              <span>Website Monitoring Made Simple</span>
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="flex justify-center items-center space-x-4 mb-8">
+            <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl shadow-2xl shadow-blue-500/25">
+              <Activity className="w-12 h-12 text-white" />
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              Uptime Ninja
+            </h1>
+          </div>
+
+          <div className="mb-12">
+            <div className="inline-flex items-center bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-sm border border-slate-600/50 px-6 py-3 rounded-2xl shadow-xl">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-white font-medium text-lg">
+                  Website Monitoring Made Simple
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="text-6xl md:text-7xl font-bold mb-8 leading-tight">
+            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              Monitor Your Websites
             </span>
-          </span>
-        </div>
+            <br />
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              24/7
+            </span>
+          </h2>
 
-        <h2 className="text-5xl md:text-6xl font-bold mb-5 leading-tight">
-          Monitor Your Websites
-          <br />
-          <span className="text-blue-400">24/7</span>
-        </h2>
+          <p className="text-2xl text-gray-300 mb-16 max-w-3xl mx-auto leading-relaxed">
+            Keep your websites and services running smoothly with real-time
+            monitoring, instant alerts, and detailed uptime analytics.
+          </p>
 
-        <p className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-          Keep your websites and services running smoothly with real-time
-          monitoring, instant alerts, and detailed uptime analytics.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link
-            href="/register"
-            className="px-8 py-3 bg-white text-slate-900 rounded-lg hover:bg-gray-100 transition-colors font-semibold text-lg"
-          >
-            Get Started Free
-          </Link>
-          <Link
-            href="/login"
-            className="px-8 py-3 border border-slate-600 rounded-lg hover:bg-slate-800 transition-colors font-semibold text-lg"
-          >
-            Sign In
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <Link
+              href="/register"
+              className="group flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
+            >
+              <span>Get Started Free</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="/login"
+              className="px-8 py-4 bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 border border-slate-600 text-white rounded-2xl font-semibold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
+            >
+              Sign In
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="px-6 py-16 bg-slate-800/50 border-t border-b border-slate-700">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-4xl font-bold mb-2">50,000+</div>
-            <div className="text-slate-400">Websites Monitored</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold mb-2">99.9%</div>
-            <div className="text-slate-400">Uptime Accuracy</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold mb-2">&lt;1s</div>
-            <div className="text-slate-400">Response Time</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold mb-2">15+</div>
-            <div className="text-slate-400">Global Locations</div>
+      <section className="px-6 py-20 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 to-slate-700/30 backdrop-blur-sm" />
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat) => (
+              <div
+                key={stat.key}
+                className={`group relative text-center p-8 bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl border border-slate-700 ${stat.borderHover} transition-all duration-300 shadow-lg hover:shadow-xl ${stat.shadowHover ?? ""} hover:scale-105`}
+              >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                />
+                <div className="relative">
+                  <div className="flex justify-center mb-4">
+                    <div className={`p-3 ${stat.iconBg} rounded-xl`}>
+                      {stat.icon}
+                    </div>
+                  </div>
+                  <div className={`text-4xl font-bold mb-2 ${stat.valueStyle}`}>
+                    {stat.value}
+                  </div>
+                  <div className="text-gray-400 font-medium">{stat.label}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold mb-4">
+      <section className="py-24 px-6 relative">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center space-x-3 mb-6">
+              <div className="p-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl">
+                <Star className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-cyan-400 font-semibold text-lg">
+                Premium Features
+              </span>
+            </div>
+            <h3 className="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               Why Choose Uptime Ninja?
             </h3>
-            <p className="text-xl text-slate-400">
-              Simple, powerful monitoring that just works
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Simple, powerful monitoring that just works for modern businesses
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Real-time Monitoring */}
-            <div className="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-6">
-                <Activity className="w-6 h-6 text-blue-400" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature) => (
+              <div
+                key={feature.key}
+                className={`group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-8 rounded-2xl border border-slate-700 hover:border-${feature.borderColor}/50 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-${feature.shadowColor}`}
+              >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br from-${feature.gradientFrom} to-${feature.gradientTo} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                />
+                <div className="relative">
+                  <div
+                    className={`p-4 bg-gradient-to-r from-${feature.iconBgFrom} to-${feature.iconBgTo} rounded-2xl w-fit mb-6 border border-${feature.iconBorder}`}
+                  >
+                    {feature.icon}
+                  </div>
+                  <h4 className="text-2xl font-bold mb-4 text-white">
+                    {feature.title}
+                  </h4>
+                  <p className="text-gray-400 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
-              <h4 className="text-2xl font-bold mb-4">Real-time Monitoring</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Monitor your websites every minute with instant notifications
-                when issues arise.
-              </p>
-            </div>
-
-            {/* Detailed Analytics */}
-            <div className="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mb-6">
-                <BarChart3 className="w-6 h-6 text-green-400" />
-              </div>
-              <h4 className="text-2xl font-bold mb-4">Detailed Analytics</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Get insights into your website performance with uptime
-                statistics and response times.
-              </p>
-            </div>
-
-            {/* Instant Alerts */}
-            <div className="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center mb-6">
-                <Bell className="w-6 h-6 text-yellow-400" />
-              </div>
-              <h4 className="text-2xl font-bold mb-4">Instant Alerts</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Receive immediate notifications via email when your websites go
-                down or recover.
-              </p>
-            </div>
-
-            {/* Easy Setup */}
-            <div className="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-6">
-                <CheckCircle className="w-6 h-6 text-purple-400" />
-              </div>
-              <h4 className="text-2xl font-bold mb-4">Easy Setup</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Add your websites in seconds. No complex configuration or
-                technical knowledge required.
-              </p>
-            </div>
-
-            {/* Incident Tracking */}
-            <div className="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center mb-6">
-                <Shield className="w-6 h-6 text-red-400" />
-              </div>
-              <h4 className="text-2xl font-bold mb-4">Incident Tracking</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Keep track of all downtime events with detailed incident logs
-                and recovery times.
-              </p>
-            </div>
-
-            {/* Status Dashboard */}
-            <div className="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center mb-6">
-                <TrendingUp className="w-6 h-6 text-cyan-400" />
-              </div>
-              <h4 className="text-2xl font-bold mb-4">Status Dashboard</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Beautiful, intuitive dashboard to monitor all your services at a
-                glance.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="px-6 py-24 bg-slate-800/50 border-t border-b border-slate-700 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/5 blur-2xl opacity-20 pointer-events-none" />
-        <div className="max-w-6xl mx-auto relative z-10">
+      <section className="px-6 py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5" />
+        <div className="absolute top-0 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white tracking-tight">
+            <div className="inline-flex items-center space-x-3 mb-6">
+              <div className="p-2 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl">
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-orange-400 font-semibold text-lg">
+                Simple Process
+              </span>
+            </div>
+            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
               How Uptime Ninja Works?
             </h2>
-            <p className="text-lg text-slate-400 max-w-xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               Get started in minutes with our simple 3-step process.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-10">
+          <div className="grid md:grid-cols-3 gap-12">
             {[
               {
                 step: "1",
                 title: "Add Your URLs",
                 desc: "Simply enter the websites, APIs, or services you want to monitor.",
+                color: "from-blue-500 to-cyan-500",
+                bgColor: "from-blue-500/10 to-cyan-500/10",
+                borderColor: "border-blue-500/30",
               },
               {
                 step: "2",
                 title: "Configure Alerts",
                 desc: "Choose how you want to be notified—email, SMS, or webhook.",
+                color: "from-purple-500 to-pink-500",
+                bgColor: "from-purple-500/10 to-pink-500/10",
+                borderColor: "border-purple-500/30",
               },
               {
                 step: "3",
                 title: "Monitor & Analyze",
                 desc: "Track uptime, downtime, and performance in real time.",
+                color: "from-green-500 to-emerald-500",
+                bgColor: "from-green-500/10 to-emerald-500/10",
+                borderColor: "border-green-500/30",
               },
-            ].map(({ step, title, desc }) => (
+            ].map(({ step, title, desc, color, bgColor, borderColor }) => (
               <div
                 key={step}
-                className="relative group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-md transition-transform hover:scale-105 hover:shadow-neon"
+                className={`group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700 hover:${borderColor} rounded-2xl p-10 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
               >
-                <div className="w-14 h-14 bg-blue-600/30 text-white rounded-full flex items-center justify-center text-2xl font-extrabold mb-6 mx-auto">
-                  {step}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${bgColor} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                />
+                <div className="relative">
+                  <div
+                    className={`w-16 h-16 bg-gradient-to-r ${color} text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold mb-8 mx-auto shadow-lg`}
+                  >
+                    {step}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white text-center mb-4">
+                    {title}
+                  </h3>
+                  <p className="text-gray-400 text-center leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold text-white text-center mb-3">
-                  {title}
-                </h3>
-                <p className="text-slate-400 text-center text-base leading-relaxed">
-                  {desc}
-                </p>
               </div>
             ))}
           </div>
@@ -217,34 +378,47 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 text-center">
-        <div className="max-w-4xl mx-auto">
-          <div className="w-16 h-16 bg-slate-600 rounded-full flex items-center justify-center mx-auto mb-8">
-            <Globe className="w-8 h-8 text-white" />
+      <section className="py-24 px-6 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-800/30 to-slate-900/30" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="p-4 bg-gradient-to-r from-slate-700/50 to-slate-600/50 rounded-3xl w-fit mx-auto mb-8 border border-slate-600/50">
+            <Globe className="w-12 h-12 text-blue-400" />
           </div>
-          <h3 className="text-4xl font-bold mb-6">
+          <h3 className="text-5xl font-bold mb-8 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Ready to Start Monitoring?
           </h3>
-          <p className="text-xl text-slate-400 mb-12 leading-relaxed">
+          <p className="text-xl text-gray-400 mb-12 leading-relaxed max-w-3xl mx-auto">
             Join thousands of developers and businesses who trust Uptime Ninja
             to keep their websites running smoothly.
           </p>
           <Link
             href="/register"
-            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-lg transition-colors"
+            className="group inline-flex items-center space-x-3 px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white rounded-2xl font-semibold text-xl transition-all duration-300 shadow-2xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
           >
-            Create Your Free Account
+            <span>Create Your Free Account</span>
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-8 px-6 text-center text-slate-400">
-        <div className="flex items-center justify-center space-x-2 mb-4">
-          <Activity className="w-5 h-5 text-blue-400" />
-          <span className="font-semibold">Uptime Ninja</span>
+      <footer className="border-t border-slate-700/50 py-12 px-6 relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-slate-800/80" />
+        <div className="relative z-10 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl">
+              <Activity className="w-6 h-6 text-white" />
+            </div>
+            <span className="font-bold text-xl bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              Uptime Ninja
+            </span>
+          </div>
+          <p className="text-gray-400">
+            &copy; 2025 Uptime Ninja. All rights reserved.
+          </p>
         </div>
-        <p>&copy; 2025 Uptime Ninja. All rights reserved.</p>
       </footer>
     </div>
   );

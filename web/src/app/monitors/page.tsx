@@ -9,6 +9,7 @@ import {
   saveMonitor,
   updateMonitor,
 } from "@/lib/monitor-api";
+import { themeClasses } from "@/theme";
 import {
   Activity,
   AlertCircle,
@@ -59,8 +60,8 @@ export default function Monitors() {
   const fetchMonitors = useCallback(async () => {
     try {
       setLoading(true);
-      const response: any = await getAllMonitors();
-      const data = response.data;
+      const response: Monitor[] = await getAllMonitors();
+      const data = response || [];
 
       setMonitors(data);
 
@@ -94,6 +95,8 @@ export default function Monitors() {
 
   useEffect(() => {
     fetchMonitors();
+    const interval = setInterval(fetchMonitors, 50000);
+    return () => clearInterval(interval);
   }, [fetchMonitors]);
 
   const filteredMonitors = useMemo(() => {
@@ -145,33 +148,29 @@ export default function Monitors() {
     try {
       await deleteMonitor(monitorId);
       await fetchMonitors();
+      setDropdownOpen(null);
     } catch (error) {
       console.error("Error deleting monitor:", error);
     }
-    setDropdownOpen(null);
   };
 
   const handleSave = async (newMonitor: Partial<Monitor>) => {
-    try {
-      await saveMonitor(newMonitor);
+    const res = await saveMonitor(newMonitor);
+    if (res) {
       await fetchMonitors();
-    } catch (error) {
-      console.error("Error adding monitor:", error);
+      setShowAddModal(false);
     }
-    setShowAddModal(false);
   };
 
   const handleSaveEdit = async (updatedMonitor: Partial<Monitor>) => {
-    try {
-      if (selectedMonitor) {
-        await updateMonitor(selectedMonitor.id, updatedMonitor);
+    if (selectedMonitor) {
+      const res = await updateMonitor(selectedMonitor.id, updatedMonitor);
+      if (res) {
+        setShowEditModal(false);
+        setSelectedMonitor(null);
         await fetchMonitors();
       }
-    } catch (error) {
-      console.error("Error updating monitor:", error);
     }
-    setShowEditModal(false);
-    setSelectedMonitor(null);
   };
 
   const toggleDropdown = (monitorId: string) => {
@@ -179,7 +178,7 @@ export default function Monitors() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className={themeClasses.page}>
       {/* Header */}
       <Header activeTab="monitors" />
 

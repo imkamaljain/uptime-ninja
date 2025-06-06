@@ -10,6 +10,7 @@ import { Repository } from "typeorm";
 import { MonitorStatus } from "../enums/monitor.enum";
 import { EmailService } from "./email.service";
 import { MyLoggerService } from "./my-logger.service";
+import { SlackService } from "./slack.service";
 import { SslCheckerService } from "./ssl-checker.service";
 
 @Injectable()
@@ -22,6 +23,7 @@ export class CronService {
     private readonly emailService: EmailService,
     private readonly incidentService: IncidentService,
     private readonly sslCheckerService: SslCheckerService,
+    private readonly slackService: SlackService,
   ) {}
 
   private calculateDowntime(startDate: Date, endDate: Date): string {
@@ -72,22 +74,38 @@ export class CronService {
                 monitor.url,
               );
             }
+            if (monitor.user.slack_webhook_url) {
+              const message = `🔴 *${monitor.name}* is down\n${monitor.url}`;
+              await this.slackService.sendAlert(
+                monitor.user.slack_webhook_url,
+                message,
+              );
+            }
             this.logger.warn(`Monitor ${monitor.name} is down: ${monitor.url}`);
           } else if (monitor.status === MonitorStatus.DOWN) {
             // Resolve any open incidents when monitor comes back up
             const incident: Partial<Incident> =
               await this.incidentService.resolveIncident(monitor.id);
-            if (monitor.user.email_opt_in && incident) {
-              const downtime = this.calculateDowntime(
-                incident.started_at,
-                incident.resolved_at,
-              );
-              await this.emailService.sendUpNotification(
-                monitor.user.email,
-                monitor.name,
-                monitor.url,
-                downtime,
-              );
+            if (incident) {
+              if (monitor.user.email_opt_in) {
+                const downtime = this.calculateDowntime(
+                  incident.created_at,
+                  incident.resolved_at,
+                );
+                await this.emailService.sendUpNotification(
+                  monitor.user.email,
+                  monitor.name,
+                  monitor.url,
+                  downtime,
+                );
+              }
+              if (monitor.user.slack_webhook_url) {
+                const message = `🟢 *${monitor.name}* is back up\n${monitor.url}`;
+                await this.slackService.sendAlert(
+                  monitor.user.slack_webhook_url,
+                  message,
+                );
+              }
             }
             this.logger.log(`Monitor ${monitor.name} is back up`);
           }

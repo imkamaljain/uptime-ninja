@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -58,24 +59,33 @@ export class MonitorService {
     monitor_id: number,
     body: UpdateMonitorRequestDto,
   ) {
-    const updateResult: UpdateResult = await this.monitorRepository.update(
-      {
-        id: monitor_id,
-        user_id,
-      },
-      {
-        name: body.name,
-        url: body.url,
-      },
-    );
+    try {
+      const updateResult: UpdateResult = await this.monitorRepository.update(
+        {
+          id: monitor_id,
+          user_id,
+        },
+        {
+          name: body.name,
+          url: body.url,
+        },
+      );
 
-    if (updateResult.affected === 0) {
-      throw new NotFoundException("monitor not found");
+      if (updateResult.affected === 0) {
+        throw new NotFoundException("monitor not found");
+      }
+
+      return {
+        message: "success",
+      };
+    } catch (error) {
+      if (error.code === "23505" || error.message.includes("unique")) {
+        throw new BadRequestException(
+          "A monitor with this URL already exists.",
+        );
+      }
+      throw error;
     }
-
-    return {
-      message: "success",
-    };
   }
 
   async deleteMonitor(user_id: string, monitor_id: number) {

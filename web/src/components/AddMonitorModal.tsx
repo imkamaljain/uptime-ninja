@@ -42,7 +42,7 @@ export default function AddMonitorModal({
     } else if (!isEditMode) {
       setFormData({ name: "", url: "", interval: "5" });
     }
-  }, [initialData, isEditMode, isOpen]);
+  }, [initialData, isEditMode]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -69,11 +69,7 @@ export default function AddMonitorModal({
 
       await onSave(formData);
 
-      if (!isEditMode) {
-        setFormData({ name: "", url: "", interval: "5" });
-      }
       setError("");
-      onClose();
     } catch (error) {
       console.error(`${isEditMode ? "Update" : "Registration"} failed:`, error);
       setError("Failed to save monitor. Please try again.");

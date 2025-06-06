@@ -5,6 +5,7 @@ import { MonitorModule } from "src/modules/monitor/monitor.module";
 import { CronService } from "./services/cron.service";
 import { EmailService } from "./services/email.service";
 import { MyLoggerService } from "./services/my-logger.service";
+import { SlackService } from "./services/slack.service";
 import { SslCheckerService } from "./services/ssl-checker.service";
 
 @Module({
@@ -13,7 +14,13 @@ import { SslCheckerService } from "./services/ssl-checker.service";
     forwardRef((): typeof MonitorModule => MonitorModule),
     forwardRef((): typeof IncidentModule => IncidentModule),
   ],
-  providers: [MyLoggerService, SslCheckerService, EmailService, CronService],
-  exports: [MyLoggerService, SslCheckerService, EmailService],
+  providers: [
+    MyLoggerService,
+    SslCheckerService,
+    EmailService,
+    CronService,
+    SlackService,
+  ],
+  exports: [MyLoggerService, SslCheckerService, EmailService, SlackService],
 })
 export class CommonModule {}

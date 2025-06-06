@@ -42,7 +42,7 @@ export class Monitor {
   @Column({
     type: "enum",
     enum: MonitorStatus,
-    default: MonitorStatus.UP,
+    default: MonitorStatus.UNKNOWN,
   })
   status: string;
 

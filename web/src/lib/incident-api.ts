@@ -5,7 +5,7 @@ export async function getAllIncidents() {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_API_URL}/incident`,
     );
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Registration failed:", error);
   }

@@ -59,7 +59,7 @@ export class MonitorController {
 
   @Delete("all")
   @ApiOperation({
-    summary: "Delete all monitor",
+    summary: "Delete all monitors",
     description: "Delete all monitors of user",
   })
   @HttpCode(HttpStatus.NO_CONTENT)
