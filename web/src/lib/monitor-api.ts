@@ -49,3 +49,15 @@ export async function deleteMonitor(id: any) {
     toast.error(error?.response?.data?.message || error?.message);
   }
 }
+
+export async function deleteAllMonitors() {
+  try {
+    const response = await api.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}/monitor/all`,
+    );
+    toast.success("All monitors deleted successfully!");
+    return response;
+  } catch (error: any) {
+    toast.error(error?.response?.data?.message || error?.message);
+  }
+}

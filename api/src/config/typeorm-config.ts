@@ -16,9 +16,9 @@ export const typeOrmConfig = TypeOrmModule.forRootAsync({
       database: process.env.DB_NAME,
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
-      // ssl: {
-      //   rejectUnauthorized: false,
-      // },
+      ssl: {
+        rejectUnauthorized: false,
+      },
       logging: true,
       logger,
       migrations: ["dist/migrations/*{.ts,.js}"],

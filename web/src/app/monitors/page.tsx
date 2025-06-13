@@ -22,6 +22,7 @@ import {
   MoreVertical,
   Plus,
   RefreshCw,
+  Trash2,
   TrendingUp,
   XCircle,
   Zap,
@@ -151,6 +152,24 @@ export default function Monitors() {
       setDropdownOpen(null);
     } catch (error) {
       console.error("Error deleting monitor:", error);
+    }
+  };
+
+  const handleDeleteAllMonitors = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete all monitors? This action cannot be undone.",
+      )
+    ) {
+      try {
+        setLoading(true);
+        await Promise.all(monitors.map((monitor) => deleteMonitor(monitor.id)));
+        await fetchMonitors();
+      } catch (error) {
+        console.error("Error deleting all monitors:", error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -534,6 +553,23 @@ export default function Monitors() {
               <div className="text-left">
                 <p className="font-bold text-white text-lg">Add Monitor</p>
                 <p className="text-sm text-gray-400">Monitor a new service</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDeleteAllMonitors}
+              className="group flex items-center space-x-4 p-6 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl hover:border-red-500/50 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-red-500/10"
+              disabled={monitors.length === 0 || loading}
+            >
+              <div className="p-3 bg-red-500/20 rounded-xl group-hover:bg-red-500/30 transition-colors">
+                <Trash2 className="w-6 h-6 text-red-400 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+              <div className="text-left">
+                <p className="font-bold text-white text-lg">
+                  Delete All Monitors
+                </p>
+                <p className="text-sm text-gray-400">Remove all monitors</p>
               </div>
             </button>
 

@@ -14,7 +14,7 @@ export class IncidentService {
     private readonly logger: MyLoggerService,
   ) {}
 
-  async createIncident(monitor: Monitor, error?: string) {
+  async createIncident(monitor: Partial<Monitor>, error?: string) {
     const title = `Monitor ${monitor.name} is down`;
     const description = error
       ? `Failed to connect to ${monitor.url}: ${error}`

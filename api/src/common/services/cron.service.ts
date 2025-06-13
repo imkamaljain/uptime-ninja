@@ -37,35 +37,55 @@ export class CronService {
       : `${minutes} minutes`;
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  // @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_MINUTE)
   async checkMonitorStatus() {
     this.logger.log("Starting monitor status check...");
 
-    const monitors: Monitor[] = await this.monitorRepository.find({
-      relations: ["user"],
-    });
+    const monitors: Partial<Monitor>[] = await this.monitorRepository
+      .createQueryBuilder("monitor")
+      .leftJoin("monitor.user", "user")
+      .select([
+        "monitor.id",
+        "monitor.name",
+        "monitor.url",
+        "monitor.status",
 
-    for (const monitor of monitors) {
+        "user.id",
+        "user.email",
+        "user.email_opt_in",
+        "user.slack_webhook_url",
+        "user.is_deleted",
+      ])
+      .where("user.is_deleted = :isDeleted", { isDeleted: false })
+      .getMany();
+
+    const updates: Partial<Monitor>[] = [];
+    const tasks = monitors.map(async (monitor) => {
       try {
-        const start = process.hrtime.bigint();
+        const start: bigint = process.hrtime.bigint();
         const response = await this.httpService.axiosRef.get(monitor.url, {
-          timeout: 10000, // 10 seconds timeout
+          timeout: 5000,
         });
-        const end = process.hrtime.bigint();
-        const responseTime = Math.round(Number(end - start) / 1_000_000);
+        const end: bigint = process.hrtime.bigint();
+        const responseTime: number = Math.round(
+          Number(end - start) / 1_000_000,
+        );
 
-        const isUp = response.status >= 200 && response.status < 300;
-        const newStatus = isUp ? MonitorStatus.UP : MonitorStatus.DOWN;
+        const isUp: boolean = response.status >= 200 && response.status < 300;
+        const newStatus: MonitorStatus.UP | MonitorStatus.DOWN = isUp
+          ? MonitorStatus.UP
+          : MonitorStatus.DOWN;
 
         if (monitor.status !== newStatus) {
-          await this.monitorRepository.update(monitor.id, {
+          updates.push({
+            id: monitor.id,
             status: newStatus,
-            last_checked_at: dayjs(),
+            last_checked_at: dayjs().toDate(),
             response_time: responseTime,
           });
 
           if (!isUp) {
-            // Create an incident if the monitor is down
             await this.incidentService.createIncident(monitor);
             if (monitor.user.email_opt_in) {
               await this.emailService.sendDownNotification(
@@ -83,7 +103,6 @@ export class CronService {
             }
             this.logger.warn(`Monitor ${monitor.name} is down: ${monitor.url}`);
           } else if (monitor.status === MonitorStatus.DOWN) {
-            // Resolve any open incidents when monitor comes back up
             const incident: Partial<Incident> =
               await this.incidentService.resolveIncident(monitor.id);
             if (incident) {
@@ -106,24 +125,23 @@ export class CronService {
                   message,
                 );
               }
+              this.logger.log(`Monitor ${monitor.name} is back up`);
             }
-            this.logger.log(`Monitor ${monitor.name} is back up`);
           }
         } else {
-          await this.monitorRepository.update(monitor.id, {
-            last_checked_at: dayjs(),
+          updates.push({
+            id: monitor.id,
+            last_checked_at: dayjs().toDate(),
             response_time: responseTime,
           });
         }
       } catch (error) {
-        // If request fails, mark monitor as down
         if (monitor.status !== MonitorStatus.DOWN) {
-          await this.monitorRepository.update(monitor.id, {
+          updates.push({
+            id: monitor.id,
             status: MonitorStatus.DOWN,
-            last_checked_at: dayjs(),
+            last_checked_at: dayjs().toDate(),
           });
-
-          // Create an incident for the failure
           await this.incidentService.createIncident(monitor, error.message);
           if (monitor.user.email_opt_in) {
             await this.emailService.sendDownNotification(
@@ -138,6 +156,11 @@ export class CronService {
           );
         }
       }
+    });
+
+    await Promise.all(tasks);
+    if (updates.length > 0) {
+      await this.monitorRepository.save(updates, { chunk: 100 });
     }
 
     this.logger.log("Monitor status check completed");
@@ -147,41 +170,38 @@ export class CronService {
   async checkSslExpiry() {
     this.logger.log("Starting daily SSL certificate check...");
 
-    try {
-      const monitors = await this.monitorRepository.find({
-        relations: ["user"],
-      });
+    const monitors = await this.monitorRepository.find({
+      select: ["id", "name", "url"],
+      relations: { user: true },
+      loadRelationIds: { relations: ["user.email"] },
+    });
 
-      for (const monitor of monitors) {
-        try {
-          const sslCheck = await this.sslCheckerService.checkDomain(
+    const tasks = monitors.map(async (monitor) => {
+      try {
+        const sslCheck = await this.sslCheckerService.checkDomain(monitor.url);
+        if (
+          sslCheck.success &&
+          sslCheck.data.daysRemaining <= 1 &&
+          monitor.user.email_opt_in
+        ) {
+          await this.emailService.sendSSLExpiryNotification(
+            monitor.user.email,
+            monitor.name,
             monitor.url,
+            sslCheck.data.daysRemaining,
           );
-
-          if (sslCheck.success) {
-            const daysToExpiry = sslCheck.data.daysRemaining;
-
-            // Check if SSL is expiring in the next day
-            if (daysToExpiry <= 1 && monitor.user.email_opt_in) {
-              await this.emailService.sendSSLExpiryNotification(
-                monitor.user.email,
-                monitor.name,
-                monitor.url,
-                daysToExpiry,
-              );
-              this.logger.warn(
-                `SSL certificate for ${monitor.name} (${monitor.url}) is expiring in ${daysToExpiry} days`,
-              );
-            }
-          }
-        } catch (error) {
-          this.logger.error(
-            `Failed to check SSL for ${monitor.name}: ${error.message}`,
+          this.logger.warn(
+            `SSL certificate for ${monitor.name} (${monitor.url}) is expiring in ${sslCheck.data.daysRemaining} days`,
           );
         }
+      } catch (error) {
+        this.logger.error(
+          `Failed to check SSL for ${monitor.name}: ${error.message}`,
+        );
       }
-    } catch (error) {
-      this.logger.error(`SSL check cron job failed: ${error.message}`);
-    }
+    });
+
+    await Promise.all(tasks);
+    this.logger.log("SSL certificate check completed");
   }
 }

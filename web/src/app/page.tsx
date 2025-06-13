@@ -78,9 +78,9 @@ export default function Home() {
       borderColor: "blue-500",
       gradientFrom: "blue-500/5",
       gradientTo: "cyan-500/5",
-      iconBgFrom: "blue-500/20",
-      iconBgTo: "cyan-500/20",
-      iconBorder: "blue-500/30",
+      iconBgFrom: "from-blue-500/20",
+      iconBgTo: "to-cyan-500/20",
+      iconBorder: "border-blue-500/30",
       shadowColor: "blue-500/10",
     },
     {
@@ -92,9 +92,9 @@ export default function Home() {
       borderColor: "green-500",
       gradientFrom: "green-500/5",
       gradientTo: "emerald-500/5",
-      iconBgFrom: "green-500/20",
-      iconBgTo: "emerald-500/20",
-      iconBorder: "green-500/30",
+      iconBgFrom: "from-green-500/20",
+      iconBgTo: "to-emerald-500/20",
+      iconBorder: "border-green-500/30",
       shadowColor: "green-500/10",
     },
     {
@@ -106,9 +106,9 @@ export default function Home() {
       borderColor: "yellow-500",
       gradientFrom: "yellow-500/5",
       gradientTo: "orange-500/5",
-      iconBgFrom: "yellow-500/20",
-      iconBgTo: "orange-500/20",
-      iconBorder: "yellow-500/30",
+      iconBgFrom: "from-yellow-500/20",
+      iconBgTo: "to-orange-500/20",
+      iconBorder: "border-yellow-500/30",
       shadowColor: "yellow-500/10",
     },
     {
@@ -120,9 +120,9 @@ export default function Home() {
       borderColor: "purple-500",
       gradientFrom: "purple-500/5",
       gradientTo: "pink-500/5",
-      iconBgFrom: "purple-500/20",
-      iconBgTo: "pink-500/20",
-      iconBorder: "purple-500/30",
+      iconBgFrom: "from-purple-500/20",
+      iconBgTo: "to-pink-500/20",
+      iconBorder: "border-purple-500/30",
       shadowColor: "purple-500/10",
     },
     {
@@ -134,9 +134,9 @@ export default function Home() {
       borderColor: "red-500",
       gradientFrom: "red-500/5",
       gradientTo: "orange-500/5",
-      iconBgFrom: "red-500/20",
-      iconBgTo: "orange-500/20",
-      iconBorder: "red-500/30",
+      iconBgFrom: "from-red-500/20",
+      iconBgTo: "to-orange-500/20",
+      iconBorder: "border-red-500/30",
       shadowColor: "red-500/10",
     },
     {
@@ -148,9 +148,9 @@ export default function Home() {
       borderColor: "cyan-500",
       gradientFrom: "cyan-500/5",
       gradientTo: "blue-500/5",
-      iconBgFrom: "cyan-500/20",
-      iconBgTo: "blue-500/20",
-      iconBorder: "cyan-500/30",
+      iconBgFrom: "from-cyan-500/20",
+      iconBgTo: "to-blue-500/20",
+      iconBorder: "border-cyan-500/30",
       shadowColor: "cyan-500/10",
     },
   ];
@@ -283,7 +283,7 @@ export default function Home() {
                 />
                 <div className="relative">
                   <div
-                    className={`p-4 bg-gradient-to-r from-${feature.iconBgFrom} to-${feature.iconBgTo} rounded-2xl w-fit mb-6 border border-${feature.iconBorder}`}
+                    className={`p-4 bg-gradient-to-r ${feature.iconBgFrom} ${feature.iconBgTo} rounded-2xl w-fit mb-6 border ${feature.iconBorder}`}
                   >
                     {feature.icon}
                   </div>

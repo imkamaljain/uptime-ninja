@@ -33,11 +33,11 @@ export class EmailService {
         html: baseTemplate({
           title: `🔴 Monitor Alert: ${monitorName} is down`,
           body: `
-    <p>Your monitor <strong>${monitorName}</strong> is currently <span style="color: red;"><strong>DOWN</strong></span>.</p>
-    <p><strong>URL:</strong> <a href="${url}">${url}</a></p>
-    ${error ? `<p><strong>Error:</strong> ${error}</p>` : ""}
-    <p>We'll notify you when the service is back up.</p>
-  `,
+            <p>Your monitor <strong>${monitorName}</strong> is currently <span style="color: #dc3545;"><strong>DOWN</strong></span>.</p>
+            <p><strong>URL:</strong> <a href="${url}">${url}</a></p>
+            ${error ? `<p><strong>Error:</strong> ${error}</p>` : ""}
+            <p>We'll notify you when the service is back up.</p>
+          `,
         }),
       });
       this.logger.log(
@@ -62,10 +62,11 @@ export class EmailService {
         html: baseTemplate({
           title: `✅ Monitor Recovery: ${monitorName} is back up`,
           body: `
-    <p>Your monitor <strong>${monitorName}</strong> is now <span style="color: green;"><strong>UP</strong></span>.</p>
-    <p><strong>URL:</strong> <a href="${url}">${url}</a></p>
-    <p><strong>Total downtime:</strong> ${downtime}</p>
-  `,
+            <p>Your monitor <strong>${monitorName}</strong> is now <span style="color: #28a745;"><strong>UP</strong></span>.</p>
+            <p><strong>URL:</strong> <a href="${url}">${url}</a></p>
+            <p><strong>Total downtime:</strong> ${downtime}</p>
+            <p>Thank you for using Uptime Ninja!</p>
+          `,
         }),
       });
       this.logger.log(
@@ -90,11 +91,11 @@ export class EmailService {
         html: baseTemplate({
           title: `⚠️ SSL Certificate Expiry Alert: ${monitorName}`,
           body: `
-    <p>The SSL certificate for your monitor <strong>${monitorName}</strong> is about to expire.</p>
-    <p><strong>URL:</strong> <a href="${url}">${url}</a></p>
-    <p><strong>Time until expiry:</strong> ${daysToExpiry} day${daysToExpiry !== 1 ? "s" : ""}</p>
-    <p>Please renew the certificate to avoid disruption.</p>
-  `,
+            <p>The SSL certificate for your monitor <strong>${monitorName}</strong> is nearing expiration.</p>
+            <p><strong>URL:</strong> <a href="${url}">${url}</a></p>
+            <p><strong>Time until expiry:</strong> ${daysToExpiry} day${daysToExpiry !== 1 ? "s" : ""}</p>
+            <p>Please renew the certificate to avoid service disruption.</p>
+          `,
         }),
       });
       this.logger.log(
