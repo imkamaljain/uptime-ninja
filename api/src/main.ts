@@ -4,6 +4,7 @@ import cors from "cors";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { MyLoggerService } from "./common/services/my-logger.service";
+import { corsConfig } from "./config/cors.config";
 import { setupSwagger } from "./config/swagger";
 
 async function bootstrap() {
@@ -19,7 +20,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.use(cors({ origin: "http://localhost:3001" }));
+  app.use(cors(corsConfig));
 
   setupSwagger(app);
   await app.listen(process.env.PORT ?? 3000);

@@ -6,7 +6,7 @@ interface Monitor {
   id?: string;
   name: string;
   url: string;
-  interval: string;
+  interval?: string;
 }
 
 interface AddMonitorModalProps {

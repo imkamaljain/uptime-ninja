@@ -205,7 +205,7 @@ export const themeClasses = {
   iconBadge: (color: keyof typeof theme.colors.primary) => `
     ${theme.components.iconContainer.medium} 
     ${getIconGradient(color)} 
-    ${theme.effects?.glow || "shadow-2xl"} 
+    ${theme.colors.effects?.glow || "shadow-2xl"} 
     shadow-${color}-500/25
   `,
 };
