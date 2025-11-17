@@ -47,6 +47,12 @@ export class Monitor {
   status: string;
 
   @Column({
+    type: "int",
+    default: 5,
+  })
+  check_interval_minutes: number;
+
+  @Column({
     type: "timestamptz",
     nullable: true,
   })

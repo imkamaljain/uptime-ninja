@@ -20,7 +20,10 @@ export class MonitorService {
   ) {}
 
   async getAllMonitor(user_id: string) {
-    const data = await this.monitorRepository.findBy({ user_id });
+    const data = await this.monitorRepository.find({
+      where: { user_id },
+      order: { created_at: "ASC" },
+    });
     return data;
   }
 
@@ -68,6 +71,7 @@ export class MonitorService {
         {
           name: body.name,
           url: body.url,
+          check_interval_minutes: body.check_interval_minutes,
         },
       );
 

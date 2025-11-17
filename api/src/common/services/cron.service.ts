@@ -37,7 +37,6 @@ export class CronService {
       : `${minutes} minutes`;
   }
 
-  // @Cron(CronExpression.EVERY_5_MINUTES)
   @Cron(CronExpression.EVERY_MINUTE)
   async checkMonitorStatus() {
     this.logger.log("Starting monitor status check...");
@@ -50,6 +49,8 @@ export class CronService {
         "monitor.name",
         "monitor.url",
         "monitor.status",
+        "monitor.last_checked_at",
+        "monitor.check_interval_minutes",
 
         "user.id",
         "user.email",
@@ -58,6 +59,9 @@ export class CronService {
         "user.is_deleted",
       ])
       .where("user.is_deleted = :isDeleted", { isDeleted: false })
+      .andWhere(
+        `(monitor.last_checked_at IS NULL OR NOW() >= monitor.last_checked_at + INTERVAL '1 minute' * monitor.check_interval_minutes)`,
+      )
       .getMany();
 
     const updates: Partial<Monitor>[] = [];

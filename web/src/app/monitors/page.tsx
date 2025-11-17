@@ -19,6 +19,7 @@ import {
   CheckCircle,
   Clock,
   Globe,
+  Monitor,
   MoreVertical,
   Plus,
   RefreshCw,
@@ -38,7 +39,7 @@ interface Monitor {
   response_time: number;
   last_checked_at: string;
   created_at: string;
-  interval?: string;
+  check_interval_minutes?: number;
 }
 
 export default function Monitors() {
@@ -208,7 +209,7 @@ export default function Monitors() {
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl shadow-lg">
-                <Activity className="w-6 h-6 text-white" />
+                <Monitor className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 Monitor Dashboard
@@ -484,10 +485,11 @@ export default function Monitors() {
                     <div className="flex justify-between items-center p-2 bg-slate-700/20 rounded-lg">
                       <span className="text-gray-400 flex items-center space-x-2">
                         <Clock className="w-3 h-3" />
-                        <span>Interval</span>
+                        <span>Check Interval</span>
                       </span>
                       <span className="text-white font-medium">
-                        {monitor.interval || "5m"}
+                        {monitor.check_interval_minutes}
+                        {" minutes"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center p-2 bg-slate-700/20 rounded-lg">
@@ -496,7 +498,9 @@ export default function Monitors() {
                         <span>Last Check</span>
                       </span>
                       <span className="text-white font-medium">
-                        {dayjs(monitor.last_checked_at).fromNow()}
+                        {monitor.last_checked_at
+                          ? dayjs(monitor.last_checked_at).fromNow()
+                          : "Never"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center p-2 bg-slate-700/20 rounded-lg">
@@ -514,7 +518,10 @@ export default function Monitors() {
                   <div className="border-t border-slate-700/50 mt-4 pt-4">
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-gray-400">
-                        Checked {dayjs(monitor.last_checked_at).fromNow()}
+                        Checked{" "}
+                        {monitor.last_checked_at
+                          ? dayjs(monitor.last_checked_at).fromNow()
+                          : "never"}
                       </span>
                       {monitor.response_time && (
                         <div className="flex items-center space-x-1 bg-yellow-500/20 px-2 py-1 rounded-lg">

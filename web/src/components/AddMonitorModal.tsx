@@ -6,7 +6,7 @@ interface Monitor {
   id?: string;
   name: string;
   url: string;
-  interval?: string;
+  check_interval_minutes?: string;
 }
 
 interface AddMonitorModalProps {
@@ -27,7 +27,7 @@ export default function AddMonitorModal({
   const [formData, setFormData] = useState({
     name: "",
     url: "",
-    interval: "5",
+    check_interval_minutes: "5",
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,10 +37,10 @@ export default function AddMonitorModal({
       setFormData({
         name: initialData.name || "",
         url: initialData.url || "",
-        interval: initialData.interval || "5",
+        check_interval_minutes: initialData.check_interval_minutes || "5",
       });
     } else if (!isEditMode) {
-      setFormData({ name: "", url: "", interval: "5" });
+      setFormData({ name: "", url: "", check_interval_minutes: "5" });
     }
   }, [initialData, isEditMode]);
 
@@ -190,9 +190,9 @@ export default function AddMonitorModal({
               </label>
               <div className="relative">
                 <select
-                  id="interval"
-                  name="interval"
-                  value={formData.interval}
+                  id="check_interval_minutes"
+                  name="check_interval_minutes"
+                  value={formData.check_interval_minutes}
                   onChange={handleChange}
                   className="w-full rounded-2xl px-4 py-4 bg-slate-700/50 text-white border border-slate-600/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 cursor-pointer appearance-none hover:border-slate-500/50"
                 >
